@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useRef, useState} from 'react';
 import {Icon, VStack, useColorModeValue, Fab} from 'native-base';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import AnimatedColorBox from '../components/animated-color-box';
@@ -30,7 +30,10 @@ const initialData: Task[] = [
 
 const MainScreen = () => {
   const [data, setData] = useState(initialData);
+  console.log('data--->', JSON.stringify(data, null, 2));
   const [editingItemId, setEditingItemId] = useState<string | null>(null);
+  const prvIsNew = useRef('');
+  console.log('editingItemId--->', prvIsNew.current);
 
   const handleToggleTaskItem = useCallback(item => {
     setData(prevData => {
@@ -43,19 +46,20 @@ const MainScreen = () => {
       return newData;
     });
   }, []);
+
   const handleChangeTaskItemSubject = useCallback((item, newSubject) => {
     setData(prevData => {
       const newData = [...prevData];
       const index = prevData.indexOf(item);
+      //   console.log('index--->', newSubject.length < 1);
+      //   prvIsNew.current = newSubject.length < 1 ? item.id : '';
 
       newData[index] = {
         ...item,
         subject: newSubject,
         done: false,
         isNew:
-          newData[index]?.isNew == false || newData[index]?.isNew == undefined
-            ? false
-            : newSubject?.length === 0,
+          newSubject.length < 1 && prvIsNew.current == item.id ? true : false,
       };
       console.log('newData--->', JSON.stringify(newData, null, 2));
       return newData;
@@ -133,6 +137,7 @@ const MainScreen = () => {
             ...data,
           ]);
           setEditingItemId(id);
+          prvIsNew.current = id;
         }}
       />
     </AnimatedColorBox>

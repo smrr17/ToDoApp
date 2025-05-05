@@ -24,6 +24,7 @@ interface Props extends Pick<PanGestureHandlerProps, 'simultaneousHandlers'> {
   onChangeSubject?: (subject: string) => void;
   onFinishEditing?: () => void;
   subject: string;
+  previousValueRef?: React.MutableRefObject<string>;
 }
 
 const TaskItem = (props: Props) => {
@@ -37,6 +38,7 @@ const TaskItem = (props: Props) => {
     onChangeSubject,
     onFinishEditing,
     simultaneousHandlers,
+    previousValueRef,
   } = props;
 
   const highlightColor = useToken(
@@ -113,6 +115,25 @@ const TaskItem = (props: Props) => {
             blurOnSubmit
             onChange={handleChangeSubject}
             onBlur={onFinishEditing}
+            submitBehavior="blurAndSubmit"
+            onSubmitEditing={value => {
+              console.log('sdsdsd', value.nativeEvent.text);
+              if (
+                previousValueRef?.current !== undefined &&
+                value.nativeEvent.text
+              ) {
+                previousValueRef.current = value.nativeEvent.text;
+              }
+            }}
+            onEndEditing={value => {
+              console.log('onEndEditing', value.nativeEvent.text);
+              if (
+                previousValueRef?.current !== undefined &&
+                value.nativeEvent.text
+              ) {
+                previousValueRef.current = value.nativeEvent.text;
+              }
+            }}
           />
         ) : (
           <AnimatedTaskLabel

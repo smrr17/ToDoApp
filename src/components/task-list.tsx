@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef} from 'react';
 import {AnimatePresence, View} from 'moti';
 import {PanGestureHandlerProps, ScrollView} from 'react-native-gesture-handler';
 import TaskItem from './task-item';
@@ -61,17 +61,16 @@ const AnimatedTaskItem = (props: TaskItemProps) => {
   );
 
   const previousValueRef = useRef(data.subject);
+
   console.log('prev--->', previousValueRef);
   const handleFinishEditing = useCallback(() => {
-    console.log('finish editing');
     onFinishEditing(data);
     if (!data.subject && data.isNew) {
-      console.log('empty subject');
       // If the subject is empty, remove the item
 
       onRemove(data);
       return;
-    } else if (data.subject.length === 0) {
+    } else if (data.subject?.length === 0) {
       console.log('empty subject');
       setData((prevData: any) => {
         const newData = [...prevData];
@@ -148,6 +147,7 @@ const AnimatedTaskItem = (props: TaskItemProps) => {
         onFinishEditing={handleFinishEditing}
         onPressLabel={handlePressLabel}
         onRemove={handleRemove}
+        previousValueRef={previousValueRef}
       />
     </StyledView>
   );
