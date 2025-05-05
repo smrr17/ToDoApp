@@ -91,6 +91,7 @@ const MainScreen = () => {
         mt="-20px"
         borderTopLeftRadius="20px"
         borderTopRightRadius="20px"
+        py="40px"
         pt="20px">
         <TaskList
           data={data}
